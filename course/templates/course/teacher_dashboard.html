@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Container */
+        .container {
+            width: 85%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Section Titles */
+        h2 {
+            font-size: 1.8em;
+            color: #555;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Profile Section */
+        #profile {
+            margin-bottom: 40px;
+        }
+
+        #profile p {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        /* Courses Section */
+        #courses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .course-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 30%;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .course-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .course-item h3 {
+            font-size: 1.4em;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .course-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: gray;
+            font-size: 1.2em;
+        }
+
+        /* Section Styling for Bookings and Payments */
+        #bookings, #payments {
+            margin-bottom: 40px;
+        }
+
+        section p {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teacher Dashboard</h1>
+
+        <!-- Profile Section -->
+        <section id="profile">
+            <h2>Profile</h2>
+            <p id="profile-loading" class="loading">Loading profile...</p>
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+            <p><strong>Country:</strong> <span id="country"></span></p>
+            <p><strong>Phone Number:</strong> <span id="phone_number"></span></p>
+            <p><strong>Bio:</strong> <span id="bio"></span></p>
+            <p><strong>Expertise:</strong> <span id="expertise"></span></p>
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses">
+            <h2>Courses</h2>
+            <p id="courses-loading" class="loading">Loading courses...</p>
+            <div id="course-list"></div>
+        </section>
+
+        <!-- Bookings Section -->
+        <section id="bookings">
+            <h2>Bookings</h2>
+            <p id="bookings-loading" class="loading">Loading bookings...</p>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="payments">
+            <h2>Payments</h2>
+            <p id="payments-loading" class="loading">Loading payments...</p>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchDashboardData);
+
+        async function fetchDashboardData() {
+            const token = localStorage.getItem('access_token'); // Get token from localStorage
+            console.log('Access Token:', token); // Print the token
+
+            if (!token) {
+                alert('You are not authenticated. Please log in.');
+                window.location.replace('/login/');
+                return;
+            }
+
+            try {
+                toggleLoading('profile', true);
+                toggleLoading('courses', true);
+                toggleLoading('bookings', true);
+                toggleLoading('payments', true);
+
+                const response = await fetch('http://192.168.18.237:8000/api/teacher-dashboard/', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Attach the token in the Authorization header
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const data = await response.json();
+
+                // Handle profile data
+                toggleLoading('profile', false);
+                document.getElementById('username').textContent = data.profile.username;
+                document.getElementById('email').textContent = data.profile.email;
+                document.getElementById('address').textContent = data.profile.address;
+                document.getElementById('country').textContent = data.profile.country;
+                document.getElementById('phone_number').textContent = data.profile.phone_number;
+                document.getElementById('bio').textContent = data.profile.bio;
+                document.getElementById('expertise').textContent = data.profile.expertise;
+
+                // Handle courses data
+                toggleLoading('courses', false);
+                const courseList = document.getElementById('course-list');
+                data.courses.forEach(course => {
+                    const courseItem = document.createElement('div');
+                    courseItem.classList.add('course-item');
+                    courseItem.innerHTML = `
+                        <img src="${course.thumbnail_url}" alt="${course.title}">
+                        <h3>${course.title}</h3>
+                        <p>${course.description}</p>
+                        <p><strong>Price:</strong> $${course.price}</p>
+                        <p><strong>Validation Date:</strong> ${course.validation_date}</p>
+                    `;
+                    courseList.appendChild(courseItem);
+                });
+
+                // Handle bookings and payments data
+                toggleLoading('bookings', false); // You can handle bookings data similarly
+                toggleLoading('payments', false); // You can handle payments data similarly
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Failed to load data. Please try again later.');
+            }
+        }
+
+        // Toggle loading indicators
+        function toggleLoading(section, isLoading) {
+            const loadingElement = document.getElementById(`${section}-loading`);
+            if (isLoading) {
+                loadingElement.style.display = 'block';
+            } else {
+                loadingElement.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
