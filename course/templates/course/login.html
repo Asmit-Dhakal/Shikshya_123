@@ -2,178 +2,53 @@
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-box {
-      display: flex;
-      width: 60%;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .login-box img {
-      width: 50%;
-      object-fit: cover;
-    }
-    .login-form {
-      width: 50%;
-      padding: 40px;
-    }
-    .login-form h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .login-form p {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-    .login-form input[type="text"],
-    .login-form input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
-    .login-form label {
-      margin-bottom: 10px;
-      font-size: 12px;
-      display: block;
-      color: #666;
-    }
-    .login-form .remember-me {
-      display: flex;
-      align-items: center;
-    }
-    .login-form .remember-me input {
-      margin-right: 5px;
-    }
-    .login-form .forgot-password {
-      text-align: right;
-      margin-bottom: 20px;
-    }
-    .login-form .forgot-password a {
-      color: #007bff;
-      font-size: 12px;
-      text-decoration: none;
-    }
-    .login-form .forgot-password a:hover {
-      text-decoration: underline;
-    }
-    .login-form button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-    .login-form button:hover {
-      background-color: #0056b3;
-    }
-    .login-form .register {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-    }
-    .login-form .register a {
-      color: #007bff;
-      text-decoration: none;
-    }
-    .login-form .register a:hover {
-      text-decoration: underline;
-    }
-    .login-form .social-login {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 10px;
-    }
-    .login-form .social-login a {
-      text-decoration: none;
-      font-size: 14px;
-      color: #db4437;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #db4437;
-      padding: 10px 20px;
-      border-radius: 5px;
-      width: 100%;
-      text-align: center;
-    }
-    .login-form .social-login a:hover {
-      background-color: #db4437;
-      color: #fff;
-    }
-    .login-form .divider {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 12px;
-      color: #999;
-    }
-  </style>
-    <title>Login</title>
-</head>
-<body>
+  <title>Login</title>
 
-<div class="container">
-  <div class="login-box">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex justify-center items-center h-screen">
+  <div class="flex w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
     <!-- Left Image Section -->
-    <img src="/images/download.jpeg" alt="Job seeker">
+    <div class="w-1/2">
+      <img src="/images/download.jpeg" alt="Job seeker" class="w-full h-full object-cover">
+    </div>
 
     <!-- Right Login Section -->
-    <div class="login-form">
-      <h2>Teacher Login</h2>
-      <p>Login with your registered Username & Password.</p>
+    <div class="w-1/2 p-10">
+      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Teacher Login</h2>
+      <p class="text-sm text-gray-600 text-center mb-6">Login with your registered Username & Password.</p>
 
       <!-- Login Form -->
       <form id="loginForm">
         <!-- Username Field -->
-        <label for="uname">Username</label>
-        <input type="text" id="uname" name="uname" placeholder="Enter Username" required>
+        <label for="uname" class="block text-gray-600 mb-2">Username</label>
+        <input type="text" id="uname" name="uname" placeholder="Enter Username" class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
         <!-- Password Field -->
-        <label for="psw">Password</label>
-        <input type="password" id="psw" name="psw" placeholder="Enter Password" required>
+        <label for="psw" class="block text-gray-600 mb-2">Password</label>
+        <input type="password" id="psw" name="psw" placeholder="Enter Password" class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
         <!-- Remember Me & Forgot Password -->
-        <div class="remember-me">
-          <input type="checkbox" id="remember" name="remember">
-          <label for="remember">Remember Me</label>
-        </div>
-        <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <input type="checkbox" id="remember" name="remember" class="mr-2">
+            <label for="remember" class="text-sm text-gray-600">Remember Me</label>
+          </div>
+          <div>
+            <a href="#" class="text-sm text-blue-500 hover:underline">Forgot Password?</a>
+          </div>
         </div>
 
         <!-- Submit Button -->
-        <button type="submit">Login</button>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">Login</button>
       </form>
 
       <!-- Register & Social Login -->
-      <div class="register">
-        <p>Don't have an account? <a href="register.html">Register Now</a></p>
+      <div class="text-center mt-6">
+        <p class="text-sm text-gray-600">Don't have an account? <a href="register.html" class="text-blue-500 hover:underline">Register Now</a></p>
       </div>
     </div>
   </div>

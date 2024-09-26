@@ -134,7 +134,7 @@
             const token = localStorage.getItem('access_token');
             if (!token) {
                 alert('You are not authenticated. Please log in.');
-                window.location.replace('/login/');
+                window.location.replace('/login');
                 return;
             }
 
