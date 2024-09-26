@@ -5,106 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
     <style>
-        /* General Styling */
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
             margin: 0;
             padding: 0;
-        }
-
-        h1 {
-            text-align: center;
             color: #333;
-            font-size: 2.5em;
-            margin-top: 20px;
-            margin-bottom: 10px;
         }
 
-        /* Container */
+        h1, h2 {
+            text-align: center;
+            color: #444;
+        }
+
         .container {
-            width: 85%;
+            max-width: 900px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Section Titles */
-        h2 {
-            font-size: 1.8em;
-            color: #555;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+        .section {
+            margin-bottom: 30px;
         }
 
-        /* Profile Section */
-        #profile {
-            margin-bottom: 40px;
+        p {
+            font-size: 1em;
+            margin: 10px 0;
         }
 
-        #profile p {
-            font-size: 1.2em;
-            margin-bottom: 8px;
+        .loading {
+            text-align: center;
+            color: #888;
         }
 
-        /* Courses Section */
         #courses {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            justify-content: space-around;
         }
 
         .course-item {
-            border: 1px solid #ddd;
-            padding: 20px;
-            width: 30%;
             background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .course-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            width: 45%;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
 
         .course-item img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
-        .course-item h3 {
-            font-size: 1.4em;
-            margin: 10px 0;
-            color: #333;
+        .chapter-list {
+            margin-top: 10px;
         }
 
-        .course-item p {
-            margin: 5px 0;
-            color: #555;
-        }
-
-        .loading {
-            text-align: center;
-            font-style: italic;
-            color: gray;
-            font-size: 1.2em;
-        }
-
-        /* Form Styling */
-        .create-course-form {
-            margin-top: 20px;
-        }
-
-        .create-course-form input, .create-course-form textarea, .create-course-form button {
-            display: block;
-            width: 100%;
+        .chapter-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
             padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .create-course-form input,
+        .create-course-form textarea,
+        .create-course-form button {
+            width: 100%;
+            padding: 8px;
             margin-bottom: 10px;
             font-size: 1em;
         }
@@ -119,15 +91,6 @@
         .create-course-form button:hover {
             background-color: #218838;
         }
-
-        /* Section Styling for Bookings and Payments */
-        #bookings, #payments {
-            margin-bottom: 40px;
-        }
-
-        section p {
-            font-size: 1.2em;
-        }
     </style>
 </head>
 <body>
@@ -135,7 +98,7 @@
         <h1>Teacher Dashboard</h1>
 
         <!-- Profile Section -->
-        <section id="profile">
+        <section class="section" id="profile">
             <h2>Profile</h2>
             <p id="profile-loading" class="loading">Loading profile...</p>
             <p><strong>Username:</strong> <span id="username"></span></p>
@@ -148,33 +111,17 @@
         </section>
 
         <!-- Courses Section -->
-        <section id="courses">
+        <section class="section" id="courses">
             <h2>Courses</h2>
             <p id="courses-loading" class="loading">Loading courses...</p>
             <div id="course-list"></div>
-
-            <!-- Create Course Form -->
-            <div class="create-course-form">
-                <h3>Create a New Course</h3>
-                <input type="text" id="course-title" placeholder="Course Title">
-                <textarea id="course-description" placeholder="Course Description"></textarea>
-                <input type="file" id="course-thumbnail" accept="image/*">
-                <input type="date" id="validation-date" placeholder="Validation Date">
-                <input type="number" id="course-price" placeholder="Price" step="0.01">
-                <button id="create-course-btn">Create Course</button>
-            </div>
-        </section>
-
-        <!-- Bookings Section -->
-        <section id="bookings">
-            <h2>Bookings</h2>
-            <p id="bookings-loading" class="loading">Loading bookings...</p>
         </section>
 
         <!-- Payments Section -->
-        <section id="payments">
+        <section class="section" id="payments">
             <h2>Payments</h2>
             <p id="payments-loading" class="loading">Loading payments...</p>
+            <div id="payment-list"></div>
         </section>
     </div>
 
@@ -182,8 +129,7 @@
         document.addEventListener('DOMContentLoaded', fetchDashboardData);
 
         async function fetchDashboardData() {
-            const token = localStorage.getItem('access_token'); // Get token from localStorage
-            console.log('Access Token:', token); // Print the token
+            const token = localStorage.getItem('access_token');
 
             if (!token) {
                 alert('You are not authenticated. Please log in.');
@@ -194,13 +140,12 @@
             try {
                 toggleLoading('profile', true);
                 toggleLoading('courses', true);
-                toggleLoading('bookings', true);
                 toggleLoading('payments', true);
 
-                const response = await fetch('{{ base_url }}/api/teacher-dashboard/', {
+                const response = await fetch('http://192.168.1.115:8001/api/teacher-dashboard/', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Attach the token in the Authorization header
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -211,7 +156,7 @@
 
                 const data = await response.json();
 
-                // Handle profile data
+                // Profile
                 toggleLoading('profile', false);
                 document.getElementById('username').textContent = data.profile.username;
                 document.getElementById('email').textContent = data.profile.email;
@@ -221,87 +166,76 @@
                 document.getElementById('bio').textContent = data.profile.bio;
                 document.getElementById('expertise').textContent = data.profile.expertise;
 
-                // Handle courses data
+                // Courses
                 toggleLoading('courses', false);
                 const courseList = document.getElementById('course-list');
                 data.courses.forEach(course => {
                     const courseItem = document.createElement('div');
                     courseItem.classList.add('course-item');
+
+                    // Handle thumbnail
+                    const thumbnailUrl = course.thumbnail_url || 'https://via.placeholder.com/150';
+
                     courseItem.innerHTML = `
-                        <img src="${course.thumbnail_url}" alt="${course.title}">
+                        <img src="${thumbnailUrl}" alt="${course.title}">
                         <h3>${course.title}</h3>
                         <p>${course.description}</p>
                         <p><strong>Price:</strong> $${course.price}</p>
                         <p><strong>Validation Date:</strong> ${course.validation_date}</p>
                     `;
+
+                    // Handle chapters
+                    if (course.chapters.length > 0) {
+                        const chapterList = document.createElement('div');
+                        chapterList.classList.add('chapter-list');
+
+                        course.chapters.forEach(chapter => {
+                            const chapterItem = document.createElement('div');
+                            chapterItem.classList.add('chapter-item');
+                            chapterItem.innerHTML = `
+                                <h4>${chapter.title}</h4>
+                                <p>${chapter.description}</p>
+                            `;
+
+                            // Handle videos
+                            if (chapter.videos.length > 0) {
+                                const videoList = document.createElement('ul');
+                                chapter.videos.forEach(video => {
+                                    const videoItem = document.createElement('li');
+                                    videoItem.innerHTML = `
+                                        <a href="${video.full_video_url}" target="_blank">${video.title}</a>
+                                    `;
+                                    videoList.appendChild(videoItem);
+                                });
+                                chapterItem.appendChild(videoList);
+                            }
+                            chapterList.appendChild(chapterItem);
+                        });
+
+                        courseItem.appendChild(chapterList);
+                    }
+
                     courseList.appendChild(courseItem);
                 });
 
-                // Handle bookings and payments data
-                toggleLoading('bookings', false); // You can handle bookings data similarly
-                toggleLoading('payments', false); // You can handle payments data similarly
+                // Payments
+                toggleLoading('payments', false);
+                const paymentList = document.getElementById('payment-list');
+                data.payments.forEach(payment => {
+                    const paymentItem = document.createElement('p');
+                    paymentItem.innerHTML = `Transaction ID: ${payment.transaction_id}, Amount: $${payment.amount}, Status: ${payment.status}`;
+                    paymentList.appendChild(paymentItem);
+                });
+
             } catch (error) {
-                console.error('Error fetching data:', error);
                 alert('Failed to load data. Please try again later.');
             }
         }
 
-        // Toggle loading indicators
         function toggleLoading(section, isLoading) {
             const loadingElement = document.getElementById(`${section}-loading`);
-            if (isLoading) {
-                loadingElement.style.display = 'block';
-            } else {
-                loadingElement.style.display = 'none';
-            }
+            loadingElement.style.display = isLoading ? 'block' : 'none';
         }
-
-        // Create Course Functionality
-        document.getElementById('create-course-btn').addEventListener('click', async function() {
-            const token = localStorage.getItem('access_token'); // Get token from localStorage
-
-            const title = document.getElementById('course-title').value;
-            const description = document.getElementById('course-description').value;
-            const thumbnail = document.getElementById('course-thumbnail').files[0]; // Get the thumbnail file
-            const validationDate = document.getElementById('validation-date').value;
-            const price = parseFloat(document.getElementById('course-price').value);
-
-            if (!title || !description || !thumbnail || !validationDate || !price) {
-                alert('Please fill all the fields');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('thumbnail', thumbnail);
-            formData.append('validation_date', validationDate);
-            formData.append('price', price);
-
-            try {
-                const response = await fetch('{{ base_url }}/api/courses/create/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to create course');
-                }
-
-                const newCourse = await response.json();
-                alert('Course created successfully!');
-
-                // Optionally reload the course list or append the new course to the list
-                // fetchDashboardData(); // Uncomment this line if you want to reload the whole dashboard
-
-            } catch (error) {
-                console.error('Error creating course:', error);
-                alert('Failed to create course. Please try again later.');
-            }
-        });
     </script>
 </body>
 </html>
