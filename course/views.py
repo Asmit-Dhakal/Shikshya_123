@@ -395,22 +395,33 @@ def dashboard(request):
     return render(request, 'course/teacher_dashboard.html')
 
 
-class PaidCoursesListView(APIView):
+
+
+class PaidCourseDetailView(APIView):
+    permission_classes = [IsAuthenticated]
     """
-    API to list only the courses that the user has successfully paid for, along with chapters and videos.
-    """
+       API to list only the courses that the user has successfully paid for, along with chapters and videos.
+       """
+
+    def get_object(self, pk):
+        return get_object_or_404(Course, pk=pk)
+
+    def get(self, request, pk, *args, **kwargs):
+        course = self.get_object(pk)
+        serializer = CourseDetailPaidSerializer(course)
+        return Response(serializer.data)
+
+
+class PaidCourseListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        # Step 1: Fetch all courses that the user has successfully paid for
-        paid_courses = Payment.objects.filter(student=request.user, status='success').values_list('course', flat=True)
+        # Get all courses for which the logged-in user has made a successful payment
+        paid_courses = Course.objects.filter(
+            payment__student=request.user,  # Filter by the user
+            payment__status='success'  # Filter only successful payments
+        ).distinct()  # Ensure distinct courses are returned
 
-        # Step 2: Fetch courses, chapters, and videos related to the paid courses
-        courses = Course.objects.filter(id__in=paid_courses).prefetch_related('chapters__videos')
-
-        # Step 3: Serialize the data using CourseDetailSerializer
-        serializer = CourseDetailPaidSerializer(courses, many=True, context={'request': request})
-
-        # Step 4: Return the serialized data
+        # Serialize the filtered list of courses
+        serializer = CourseSerializer(paid_courses, many=True, context={'request': request})
         return Response(serializer.data)
-

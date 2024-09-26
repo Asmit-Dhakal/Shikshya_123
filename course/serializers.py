@@ -8,10 +8,12 @@ from users.models import User  # Assuming User is your custom User model
 
 class CourseSerializer(serializers.ModelSerializer):
     thumbnail_url = serializers.SerializerMethodField()
+    teacher_username = serializers.CharField(source='teacher.username', read_only=True)
+
 
     class Meta:
         model = Course
-        fields = ['id', 'teacher', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price']
+        fields = ['id', 'teacher_username', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price']
         read_only_fields = ['teacher']
 
     def get_thumbnail_url(self, obj):
@@ -57,10 +59,12 @@ class ChapterSerializer(serializers.ModelSerializer):
 class CourseDetailSerializer(serializers.ModelSerializer):
     chapters = ChapterDSerializer(many=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
+    teacher_username = serializers.CharField(source='teacher.username', read_only=True)
+
 
     class Meta:
         model = Course
-        fields = ['id', 'teacher', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price', 'chapters']
+        fields = ['id', 'teacher_username', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price', 'chapters']
         read_only_fields = ['teacher']
 
     def get_thumbnail_url(self, obj):
@@ -74,10 +78,12 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 class CourseDetailPaidSerializer(serializers.ModelSerializer):
     chapters = ChapterSerializer(many=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
+    teacher_username = serializers.CharField(source='teacher.username', read_only=True)
+
 
     class Meta:
         model = Course
-        fields = ['id', 'teacher', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price', 'chapters']
+        fields = ['id', 'teacher_username', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price', 'chapters']
         read_only_fields = ['teacher']
 
     def get_thumbnail_url(self, obj):
