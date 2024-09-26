@@ -96,6 +96,30 @@
             font-size: 1.2em;
         }
 
+        /* Form Styling */
+        .create-course-form {
+            margin-top: 20px;
+        }
+
+        .create-course-form input, .create-course-form textarea, .create-course-form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .create-course-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .create-course-form button:hover {
+            background-color: #218838;
+        }
+
         /* Section Styling for Bookings and Payments */
         #bookings, #payments {
             margin-bottom: 40px;
@@ -128,6 +152,17 @@
             <h2>Courses</h2>
             <p id="courses-loading" class="loading">Loading courses...</p>
             <div id="course-list"></div>
+
+            <!-- Create Course Form -->
+            <div class="create-course-form">
+                <h3>Create a New Course</h3>
+                <input type="text" id="course-title" placeholder="Course Title">
+                <textarea id="course-description" placeholder="Course Description"></textarea>
+                <input type="file" id="course-thumbnail" accept="image/*">
+                <input type="date" id="validation-date" placeholder="Validation Date">
+                <input type="number" id="course-price" placeholder="Price" step="0.01">
+                <button id="create-course-btn">Create Course</button>
+            </div>
         </section>
 
         <!-- Bookings Section -->
@@ -162,7 +197,7 @@
                 toggleLoading('bookings', true);
                 toggleLoading('payments', true);
 
-                const response = await fetch('http://192.168.18.237:8000/api/teacher-dashboard/', {
+                const response = await fetch('{{ base_url }}/api/teacher-dashboard/', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`, // Attach the token in the Authorization header
@@ -220,6 +255,53 @@
                 loadingElement.style.display = 'none';
             }
         }
+
+        // Create Course Functionality
+        document.getElementById('create-course-btn').addEventListener('click', async function() {
+            const token = localStorage.getItem('access_token'); // Get token from localStorage
+
+            const title = document.getElementById('course-title').value;
+            const description = document.getElementById('course-description').value;
+            const thumbnail = document.getElementById('course-thumbnail').files[0]; // Get the thumbnail file
+            const validationDate = document.getElementById('validation-date').value;
+            const price = parseFloat(document.getElementById('course-price').value);
+
+            if (!title || !description || !thumbnail || !validationDate || !price) {
+                alert('Please fill all the fields');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('thumbnail', thumbnail);
+            formData.append('validation_date', validationDate);
+            formData.append('price', price);
+
+            try {
+                const response = await fetch('{{ base_url }}/api/courses/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create course');
+                }
+
+                const newCourse = await response.json();
+                alert('Course created successfully!');
+
+                // Optionally reload the course list or append the new course to the list
+                // fetchDashboardData(); // Uncomment this line if you want to reload the whole dashboard
+
+            } catch (error) {
+                console.error('Error creating course:', error);
+                alert('Failed to create course. Please try again later.');
+            }
+        });
     </script>
 </body>
 </html>

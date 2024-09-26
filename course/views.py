@@ -345,7 +345,7 @@ class TeacherDashboardView(APIView):
 
         # Fetch teacher's courses
         courses = Course.objects.filter(teacher=request.user)
-        courses_serializer = CourseSerializer(courses, many=True)
+        courses_serializer = CourseDetailSerializer(courses, many=True)
 
         # Fetch payments related to teacher's courses
         payments = Payment.objects.filter(course__teacher=request.user)
