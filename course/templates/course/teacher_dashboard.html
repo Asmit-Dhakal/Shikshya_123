@@ -3,228 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
+    <title>Complete Course Dashboard</title>
 
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: #444;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        p {
-            font-size: 1em;
-            margin: 10px 0;
-        }
-
-        .loading {
-            text-align: center;
-            color: #888;
-        }
-
-        /* Grid view for courses */
-        #courses {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .course-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .course-item img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        .chapter-list, .video-list {
-            margin-top: 10px;
-        }
-
-        .chapter-item, .video-item {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .toggle-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 8px 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        .toggle-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Buttons with Icons */
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            margin-left: 10px;
-            font-size: 18px;
-            color: #007bff;
-        }
-
-        .icon-btn i {
-            font-size: 18px;
-        }
-
-        .icon-btn:hover {
-            color: #0056b3;
-        }
-
-        .icon-btn-edit {
-            color: #28a745;
-        }
-
-        .icon-btn-edit:hover {
-            color: #218838;
-        }
-
-        .icon-btn-delete {
-            color: #dc3545;
-        }
-
-        .icon-btn-delete:hover {
-            color: #c82333;
-        }
-
-        /* Form Styling */
-        .create-course-form, .create-video-form {
-            display: none;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .create-course-form input,
-        .create-course-form textarea,
-        .create-video-form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .create-course-form button,
-        .create-video-form button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .create-course-form button:hover,
-        .create-video-form button:hover {
-            background-color: #218838;
-        }
-
-        /* Align buttons side by side */
-        .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px; /* Space between buttons */
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Teacher Dashboard</h1>
+<body class="bg-gray-100 font-sans">
+    <div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-lg rounded-lg">
+        <h1 class="text-4xl font-bold text-center mb-10">Complete Course Dashboard</h1>
 
         <!-- Create Course Button -->
-        <button class="toggle-btn" onclick="toggleCreateCourseForm()">Create New Course</button>
+        <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded mb-8 hover:bg-blue-600" onclick="toggleCreateCourseForm()">Create New Course</button>
 
         <!-- Create Course Form -->
-        <div class="create-course-form" id="create-course-form">
-            <h3>Create a New Course</h3>
-            <input type="text" id="course-title" placeholder="Course Title" required>
-            <textarea id="course-description" placeholder="Course Description" required></textarea>
-            <input type="date" id="course-validation-date" placeholder="Validation Date" required>
-            <input type="number" id="course-price" placeholder="Price" step="0.01" required>
-            <label for="course-thumbnail">Upload Thumbnail:</label>
-            <input type="file" id="course-thumbnail" accept="image/*" required>
-            <button onclick="submitCourseForm()">Create Course</button>
-        </div>
-
-        <!-- Create Video Form -->
-        <div class="create-video-form" id="create-video-form">
-            <h3>Create a New Video</h3>
-            <input type="text" id="video-title" placeholder="Video Title" required>
-            <input type="file" id="video-file" accept="video/*" required>
-            <button onclick="submitVideoForm()">Create Video</button>
+        <div class="hidden bg-gray-50 p-6 rounded-lg mb-6" id="create-course-form">
+            <h3 class="text-2xl font-semibold mb-4">Create a New Course</h3>
+            <input type="text" id="course-title" placeholder="Course Title" class="w-full p-3 mb-4 border border-gray-300 rounded" required>
+            <textarea id="course-description" placeholder="Course Description" class="w-full p-3 mb-4 border border-gray-300 rounded" required></textarea>
+            <input type="date" id="course-validation-date" class="w-full p-3 mb-4 border border-gray-300 rounded" required>
+            <input type="number" id="course-price" placeholder="Price" step="0.01" class="w-full p-3 mb-4 border border-gray-300 rounded" required>
+            <label for="course-thumbnail" class="block mb-2">Upload Thumbnail:</label>
+            <input type="file" id="course-thumbnail" accept="image/*" class="w-full mb-4 p-2 border border-gray-300 rounded" required>
+            <button class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600" onclick="submitCourseForm()">Create Course</button>
         </div>
 
         <!-- Profile Section -->
-        <section class="section" id="profile">
-            <h2>Profile</h2>
-            <p id="profile-loading" class="loading">Loading profile...</p>
-            <p><strong>Username:</strong> <span id="username"></span></p>
-            <p><strong>Email:</strong> <span id="email"></span></p>
-            <p><strong>Address:</strong> <span id="address"></span></p>
-            <p><strong>Country:</strong> <span id="country"></span></p>
-            <p><strong>Phone Number:</strong> <span id="phone_number"></span></p>
-            <p><strong>Bio:</strong> <span id="bio"></span></p>
-            <p><strong>Expertise:</strong> <span id="expertise"></span></p>
+        <section id="profile" class="mb-10">
+            <h2 class="text-3xl font-semibold text-center mb-6">Profile</h2>
+            <p id="profile-loading" class="text-center text-gray-500">Loading profile...</p>
+            <div id="profile-details" class="text-center hidden">
+                <p><strong>Username:</strong> <span id="username"></span></p>
+                <p><strong>Email:</strong> <span id="email"></span></p>
+                <p><strong>Address:</strong> <span id="address"></span></p>
+                <p><strong>Country:</strong> <span id="country"></span></p>
+                <p><strong>Phone Number:</strong> <span id="phone_number"></span></p>
+                <p><strong>Bio:</strong> <span id="bio"></span></p>
+                <p><strong>Expertise:</strong> <span id="expertise"></span></p>
+            </div>
         </section>
 
         <!-- Courses Section -->
-        <section class="section" id="courses">
-            <h2>Courses</h2>
-            <p id="courses-loading" class="loading">Loading courses...</p>
-            <div id="course-list"></div>
+        <section id="courses" class="mb-10">
+            <h2 class="text-3xl font-semibold text-center mb-6">Courses</h2>
+            <p id="courses-loading" class="text-center text-gray-500">Loading courses...</p>
+            <div id="course-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
 
+        <!-- Create Video Form (hidden initially) -->
+        <div class="hidden bg-gray-50 p-6 rounded-lg mb-6" id="create-video-form">
+            <h3 class="text-2xl font-semibold mb-4">Create a New Video</h3>
+            <input type="text" id="video-title" placeholder="Video Title" class="w-full p-3 mb-4 border border-gray-300 rounded" required>
+            <input type="file" id="video-file" accept="video/*" class="w-full mb-4 p-2 border border-gray-300 rounded" required>
+            <button class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600" onclick="submitVideoForm()">Create Video</button>
+        </div>
+
         <!-- Payments Section -->
-        <section class="section" id="payments">
-            <h2>Payments</h2>
-            <p id="payments-loading" class="loading">Loading payments...</p>
-            <div id="payment-list"></div>
+        <section id="payments">
+            <h2 class="text-3xl font-semibold text-center mb-6">Payments</h2>
+            <p id="payments-loading" class="text-center text-gray-500">Loading payments...</p>
+            <div id="payment-list" class="text-center"></div>
         </section>
     </div>
 
@@ -236,7 +73,6 @@
 
         async function fetchDashboardData() {
             const token = localStorage.getItem('access_token');
-
             if (!token) {
                 alert('You are not authenticated. Please log in.');
                 window.location.replace('/login/');
@@ -248,7 +84,7 @@
                 toggleLoading('courses', true);
                 toggleLoading('payments', true);
 
-                const response = await fetch('http://192.168.1.115:8001/api/teacher-dashboard/', {
+                const response = await fetch('{{ base_url }}/api/teacher-dashboard/', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -264,6 +100,7 @@
 
                 // Profile
                 toggleLoading('profile', false);
+                document.getElementById('profile-details').classList.remove('hidden');
                 document.getElementById('username').textContent = data.profile.username;
                 document.getElementById('email').textContent = data.profile.email;
                 document.getElementById('address').textContent = data.profile.address;
@@ -278,53 +115,42 @@
                 courseList.innerHTML = '';  // Clear existing content
                 data.courses.forEach(course => {
                     const courseItem = document.createElement('div');
-                    courseItem.classList.add('course-item');
+                    courseItem.classList.add('bg-white', 'p-6', 'rounded-lg', 'shadow-lg', 'text-center');
 
-                    // Handle thumbnail
                     const thumbnailUrl = course.thumbnail_url || 'https://via.placeholder.com/150';
-
                     courseItem.innerHTML = `
-                        <img src="${thumbnailUrl}" alt="${course.title}">
-                        <h3>${course.title}</h3>
-                        <p>${course.description}</p>
-                        <p><strong>Price:</strong> $${course.price}</p>
-                        <p><strong>Validation Date:</strong> ${course.validation_date}</p>
-                        <div class="action-buttons">
-                            <button class="toggle-btn" onclick="toggleChapters(${course.id})">View Chapters</button>
-                        </div>
-                        <div class="chapter-list hidden" id="chapter-list-${course.id}"></div>
+                        <img src="${thumbnailUrl}" alt="${course.title}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold mb-2">${course.title}</h3>
+                        <p class="text-gray-600 mb-4">${course.description}</p>
+                        <p class="font-bold text-lg">$${course.price}</p>
+                        <p class="text-gray-500 text-sm">Valid until: ${course.validation_date}</p>
+                        <button class="bg-blue-500 text-white py-2 px-4 rounded mt-4 hover:bg-blue-600" onclick="toggleChapters(${course.id})">View Chapters</button>
+                        <div class="chapter-list hidden mt-4" id="chapter-list-${course.id}"></div>
                     `;
-
                     courseList.appendChild(courseItem);
 
                     // Handle chapters
                     const chapterList = document.getElementById(`chapter-list-${course.id}`);
                     course.chapters.forEach(chapter => {
                         const chapterItem = document.createElement('div');
-                        chapterItem.classList.add('chapter-item');
+                        chapterItem.classList.add('bg-gray-50', 'p-4', 'rounded-lg', 'shadow-lg', 'mb-4');
                         chapterItem.innerHTML = `
-                            <h4>${chapter.title}</h4>
-                            <p>${chapter.description}</p>
-                            <div class="action-buttons">
-                                <button class="toggle-btn" onclick="toggleVideos(${chapter.id})">View Videos</button>
-                                <button class="toggle-btn" onclick="toggleCreateVideoForm(${chapter.id})">Create Video</button>
-                                <button class="icon-btn icon-btn-edit" onclick="editChapter(${chapter.id})"><i class="fas fa-edit"></i></button>
-                                <button class="icon-btn icon-btn-delete" onclick="deleteChapter(${chapter.id})"><i class="fas fa-trash"></i></button>
-                            </div>
-                            <div class="video-list hidden" id="video-list-${chapter.id}"></div>
+                            <h4 class="text-lg font-semibold mb-2">${chapter.title}</h4>
+                            <p class="text-gray-600 mb-2">${chapter.description}</p>
+                            <button class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600" onclick="toggleVideos(${chapter.id})">View Videos</button>
+                            <button class="bg-blue-500 text-white py-2 px-4 rounded ml-2 hover:bg-blue-600" onclick="toggleCreateVideoForm(${chapter.id})">Add Video</button>
+                            <div class="video-list hidden mt-4" id="video-list-${chapter.id}"></div>
                         `;
-
                         chapterList.appendChild(chapterItem);
 
                         // Handle videos
                         const videoList = document.getElementById(`video-list-${chapter.id}`);
                         chapter.videos.forEach(video => {
                             const videoItem = document.createElement('div');
-                            videoItem.classList.add('video-item');
+                            videoItem.classList.add('p-3', 'bg-white', 'shadow-lg', 'rounded-lg', 'mb-2');
                             videoItem.innerHTML = `
-                                <a href="${video.full_video_url}" target="_blank">${video.title}</a>
-                                <button class="icon-btn icon-btn-edit" onclick="editVideo(${video.id})"><i class="fas fa-edit"></i></button>
-                                <button class="icon-btn icon-btn-delete" onclick="deleteVideo(${video.id})"><i class="fas fa-trash"></i></button>
+                                <a href="${video.full_video_url}" target="_blank" class="text-blue-500 hover:underline">${video.title}</a>
+                                <button class="text-sm text-red-500 ml-2" onclick="deleteVideo(${video.id})">Delete</button>
                             `;
                             videoList.appendChild(videoItem);
                         });
@@ -336,6 +162,7 @@
                 const paymentList = document.getElementById('payment-list');
                 data.payments.forEach(payment => {
                     const paymentItem = document.createElement('p');
+                    paymentItem.classList.add('text-gray-600', 'mb-4');
                     paymentItem.innerHTML = `Transaction ID: ${payment.transaction_id}, Amount: $${payment.amount}, Status: ${payment.status}`;
                     paymentList.appendChild(paymentItem);
                 });
@@ -366,7 +193,7 @@
         function toggleCreateVideoForm(chapterId) {
             selectedChapterId = chapterId;
             const form = document.getElementById('create-video-form');
-            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+            form.classList.toggle('hidden');
         }
 
         // Submit the Create Video Form
@@ -374,15 +201,14 @@
             const title = document.getElementById('video-title').value;
             const videoFile = document.getElementById('video-file').files[0];
 
-            // FormData to send the video along with the data
             const formData = new FormData();
             formData.append('title', title);
             formData.append('video_file', videoFile);
-            formData.append('chapter_id', selectedChapterId); // Append the selected chapter ID
+            formData.append('chapter_id', selectedChapterId);
 
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch('http://192.168.1.115:8001/api/videos/create/', {
+                const response = await fetch('{{ base_url }}/api/videos/create/', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -396,8 +222,8 @@
 
                 const newVideo = await response.json();
                 alert('Video created successfully!');
-                toggleCreateVideoForm(selectedChapterId); // Hide form after successful creation
-                fetchDashboardData(); // Reload dashboard to show the new video
+                toggleCreateVideoForm(selectedChapterId);
+                fetchDashboardData();
 
             } catch (error) {
                 alert('Error creating video: ' + error.message);
@@ -405,37 +231,17 @@
         }
 
         // Dummy functions for edit and delete actions
-        function editChapter(chapterId) {
-            alert('Edit Chapter ' + chapterId);
-            // Implement the edit chapter functionality here
-        }
-
-        function deleteChapter(chapterId) {
-            if (confirm('Are you sure you want to delete this chapter?')) {
-                alert('Delete Chapter ' + chapterId);
-                // Implement the delete chapter functionality here
-            }
-        }
-
-        function editVideo(videoId) {
-            alert('Edit Video ' + videoId);
-            // Implement the edit video functionality here
-        }
-
         function deleteVideo(videoId) {
             if (confirm('Are you sure you want to delete this video?')) {
                 alert('Delete Video ' + videoId);
-                // Implement the delete video functionality here
             }
         }
 
-        // Toggle Create Course Form visibility
         function toggleCreateCourseForm() {
             const form = document.getElementById('create-course-form');
-            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+            form.classList.toggle('hidden');
         }
 
-        // Submit the Create Course Form
         async function submitCourseForm() {
             const title = document.getElementById('course-title').value;
             const description = document.getElementById('course-description').value;
@@ -443,17 +249,16 @@
             const price = parseFloat(document.getElementById('course-price').value);
             const thumbnail = document.getElementById('course-thumbnail').files[0];
 
-            // FormData to send file along with the data
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
             formData.append('validation_date', validationDate);
             formData.append('price', price);
-            formData.append('thumbnail', thumbnail);  // Adding the thumbnail file
+            formData.append('thumbnail', thumbnail);
 
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch('http://192.168.1.115:8001/api/courses/create/', {
+                const response = await fetch('{{ base_url }}/api/courses/create/', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -467,8 +272,8 @@
 
                 const newCourse = await response.json();
                 alert('Course created successfully!');
-                toggleCreateCourseForm(); // Hide form after successful creation
-                fetchDashboardData(); // Reload dashboard to show the new course
+                toggleCreateCourseForm();
+                fetchDashboardData();
 
             } catch (error) {
                 alert('Error creating course: ' + error.message);
