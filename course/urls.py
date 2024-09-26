@@ -4,7 +4,8 @@ from .views import (
     ChapterCreateView, ChapterListView,
     VideoCreateView, VideoListView, VideoStreamView,
     BookCourseView, BookedCoursesView, BookingDetailView, DeleteBookingView,
-    PaymentCreateView, EsewaPaymentInitiationView, EsewaPaymentSuccessView, TeacherDashboardView
+    PaymentCreateView, EsewaPaymentInitiationView, EsewaPaymentSuccessView, TeacherDashboardView,
+    PaidCoursesListView
 )
 
 urlpatterns = [
@@ -34,4 +35,6 @@ urlpatterns = [
 
 
    path('teacher-dashboard/',TeacherDashboardView.as_view(), name='teacher_dashboard'),
+
+    path('paidcourses/',PaidCoursesListView.as_view(), name='paidcourse'),
 ]

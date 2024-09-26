@@ -8,8 +8,8 @@ from users.models import User  # Import the User model
 from profiles.models import TeacherProfile
 from profiles.serializers import UserSerializer, TeacherProfileSerializer
 from .models import Course, Booking, Chapter, Video, Payment
-from .serializers import CourseSerializer, BookingSerializer, ChapterSerializer, VideoSerializer, PaymentSerializer, \
-    CourseDetailSerializer, TeacherDashboardSerializer
+from .serializers import CourseSerializer, BookingSerializer, ChapterSerializer, VideoSerializer, PaymentSerializer, CourseDetailSerializer, CourseDetailPaidSerializer
+
 import os
 from django.http import StreamingHttpResponse, Http404
 import re
@@ -74,6 +74,7 @@ class CourseDetailView(APIView):
 
     def put(self, request, pk, *args, **kwargs):
         course = self.get_object(pk)
+        # Check if the user is the teacher who created the course
         if request.user != course.teacher:
             raise PermissionDenied("Only the teacher who created the course can update it.")
         serializer = CourseSerializer(course, data=request.data)
@@ -84,8 +85,20 @@ class CourseDetailView(APIView):
 
     def delete(self, request, pk, *args, **kwargs):
         course = self.get_object(pk)
-        course.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # Check if the requesting user is the teacher of the course or an admin
+        if request.user != course.teacher and not request.user.is_staff:
+            raise PermissionDenied("Only the teacher who created the course or an admin can delete it.")
+
+        try:
+            # Attempt to delete the course
+            course.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            # Log the exception for debugging purposes
+            print(f"Error occurred while deleting course: {e}")
+            return Response({"detail": "Failed to delete the course."}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CourseCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -352,7 +365,7 @@ class TeacherDashboardView(APIView):
 
         # Fetch teacher's courses
         courses = Course.objects.filter(teacher=request.user)
-        courses_serializer = CourseDetailSerializer(courses, many=True)
+        courses_serializer = CourseDetailPaidSerializer(courses, many=True)
 
         # Fetch payments related to teacher's courses
         payments = Payment.objects.filter(course__teacher=request.user)
@@ -381,4 +394,23 @@ class TeacherDashboardView(APIView):
 def dashboard(request):
     return render(request, 'course/teacher_dashboard.html')
 
+
+class PaidCoursesListView(APIView):
+    """
+    API to list only the courses that the user has successfully paid for, along with chapters and videos.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        # Step 1: Fetch all courses that the user has successfully paid for
+        paid_courses = Payment.objects.filter(student=request.user, status='success').values_list('course', flat=True)
+
+        # Step 2: Fetch courses, chapters, and videos related to the paid courses
+        courses = Course.objects.filter(id__in=paid_courses).prefetch_related('chapters__videos')
+
+        # Step 3: Serialize the data using CourseDetailSerializer
+        serializer = CourseDetailPaidSerializer(courses, many=True, context={'request': request})
+
+        # Step 4: Return the serialized data
+        return Response(serializer.data)
 

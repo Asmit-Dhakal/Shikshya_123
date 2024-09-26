@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +23,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
             background-color: white;
@@ -40,10 +44,11 @@
             color: #888;
         }
 
+        /* Grid view for courses */
         #courses {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
         .course-item {
@@ -51,8 +56,8 @@
             border: 1px solid #ddd;
             padding: 15px;
             margin: 10px;
-            width: 45%;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         .course-item img {
@@ -61,41 +66,139 @@
             margin-bottom: 10px;
         }
 
-        .chapter-list {
+        .chapter-list, .video-list {
             margin-top: 10px;
         }
 
-        .chapter-item {
+        .chapter-item, .video-item {
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             padding: 10px;
             margin-bottom: 10px;
         }
 
-        .create-course-form input,
-        .create-course-form textarea,
-        .create-course-form button {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            font-size: 1em;
+        .toggle-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
         }
 
-        .create-course-form button {
+        .toggle-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Buttons with Icons */
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 10px;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .icon-btn i {
+            font-size: 18px;
+        }
+
+        .icon-btn:hover {
+            color: #0056b3;
+        }
+
+        .icon-btn-edit {
+            color: #28a745;
+        }
+
+        .icon-btn-edit:hover {
+            color: #218838;
+        }
+
+        .icon-btn-delete {
+            color: #dc3545;
+        }
+
+        .icon-btn-delete:hover {
+            color: #c82333;
+        }
+
+        /* Form Styling */
+        .create-course-form, .create-video-form {
+            display: none;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-course-form input,
+        .create-course-form textarea,
+        .create-video-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .create-course-form button,
+        .create-video-form button {
+            padding: 10px 20px;
             background-color: #28a745;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
         }
 
-        .create-course-form button:hover {
+        .create-course-form button:hover,
+        .create-video-form button:hover {
             background-color: #218838;
+        }
+
+        /* Align buttons side by side */
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between buttons */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Teacher Dashboard</h1>
+
+        <!-- Create Course Button -->
+        <button class="toggle-btn" onclick="toggleCreateCourseForm()">Create New Course</button>
+
+        <!-- Create Course Form -->
+        <div class="create-course-form" id="create-course-form">
+            <h3>Create a New Course</h3>
+            <input type="text" id="course-title" placeholder="Course Title" required>
+            <textarea id="course-description" placeholder="Course Description" required></textarea>
+            <input type="date" id="course-validation-date" placeholder="Validation Date" required>
+            <input type="number" id="course-price" placeholder="Price" step="0.01" required>
+            <label for="course-thumbnail">Upload Thumbnail:</label>
+            <input type="file" id="course-thumbnail" accept="image/*" required>
+            <button onclick="submitCourseForm()">Create Course</button>
+        </div>
+
+        <!-- Create Video Form -->
+        <div class="create-video-form" id="create-video-form">
+            <h3>Create a New Video</h3>
+            <input type="text" id="video-title" placeholder="Video Title" required>
+            <input type="file" id="video-file" accept="video/*" required>
+            <button onclick="submitVideoForm()">Create Video</button>
+        </div>
 
         <!-- Profile Section -->
         <section class="section" id="profile">
@@ -126,6 +229,9 @@
     </div>
 
     <script>
+        let selectedCourseId = null;
+        let selectedChapterId = null;
+
         document.addEventListener('DOMContentLoaded', fetchDashboardData);
 
         async function fetchDashboardData() {
@@ -169,6 +275,7 @@
                 // Courses
                 toggleLoading('courses', false);
                 const courseList = document.getElementById('course-list');
+                courseList.innerHTML = '';  // Clear existing content
                 data.courses.forEach(course => {
                     const courseItem = document.createElement('div');
                     courseItem.classList.add('course-item');
@@ -182,40 +289,46 @@
                         <p>${course.description}</p>
                         <p><strong>Price:</strong> $${course.price}</p>
                         <p><strong>Validation Date:</strong> ${course.validation_date}</p>
+                        <div class="action-buttons">
+                            <button class="toggle-btn" onclick="toggleChapters(${course.id})">View Chapters</button>
+                        </div>
+                        <div class="chapter-list hidden" id="chapter-list-${course.id}"></div>
                     `;
 
-                    // Handle chapters
-                    if (course.chapters.length > 0) {
-                        const chapterList = document.createElement('div');
-                        chapterList.classList.add('chapter-list');
-
-                        course.chapters.forEach(chapter => {
-                            const chapterItem = document.createElement('div');
-                            chapterItem.classList.add('chapter-item');
-                            chapterItem.innerHTML = `
-                                <h4>${chapter.title}</h4>
-                                <p>${chapter.description}</p>
-                            `;
-
-                            // Handle videos
-                            if (chapter.videos.length > 0) {
-                                const videoList = document.createElement('ul');
-                                chapter.videos.forEach(video => {
-                                    const videoItem = document.createElement('li');
-                                    videoItem.innerHTML = `
-                                        <a href="${video.full_video_url}" target="_blank">${video.title}</a>
-                                    `;
-                                    videoList.appendChild(videoItem);
-                                });
-                                chapterItem.appendChild(videoList);
-                            }
-                            chapterList.appendChild(chapterItem);
-                        });
-
-                        courseItem.appendChild(chapterList);
-                    }
-
                     courseList.appendChild(courseItem);
+
+                    // Handle chapters
+                    const chapterList = document.getElementById(`chapter-list-${course.id}`);
+                    course.chapters.forEach(chapter => {
+                        const chapterItem = document.createElement('div');
+                        chapterItem.classList.add('chapter-item');
+                        chapterItem.innerHTML = `
+                            <h4>${chapter.title}</h4>
+                            <p>${chapter.description}</p>
+                            <div class="action-buttons">
+                                <button class="toggle-btn" onclick="toggleVideos(${chapter.id})">View Videos</button>
+                                <button class="toggle-btn" onclick="toggleCreateVideoForm(${chapter.id})">Create Video</button>
+                                <button class="icon-btn icon-btn-edit" onclick="editChapter(${chapter.id})"><i class="fas fa-edit"></i></button>
+                                <button class="icon-btn icon-btn-delete" onclick="deleteChapter(${chapter.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="video-list hidden" id="video-list-${chapter.id}"></div>
+                        `;
+
+                        chapterList.appendChild(chapterItem);
+
+                        // Handle videos
+                        const videoList = document.getElementById(`video-list-${chapter.id}`);
+                        chapter.videos.forEach(video => {
+                            const videoItem = document.createElement('div');
+                            videoItem.classList.add('video-item');
+                            videoItem.innerHTML = `
+                                <a href="${video.full_video_url}" target="_blank">${video.title}</a>
+                                <button class="icon-btn icon-btn-edit" onclick="editVideo(${video.id})"><i class="fas fa-edit"></i></button>
+                                <button class="icon-btn icon-btn-delete" onclick="deleteVideo(${video.id})"><i class="fas fa-trash"></i></button>
+                            `;
+                            videoList.appendChild(videoItem);
+                        });
+                    });
                 });
 
                 // Payments
@@ -235,6 +348,131 @@
         function toggleLoading(section, isLoading) {
             const loadingElement = document.getElementById(`${section}-loading`);
             loadingElement.style.display = isLoading ? 'block' : 'none';
+        }
+
+        // Toggle chapters visibility
+        function toggleChapters(courseId) {
+            const chapterList = document.getElementById(`chapter-list-${courseId}`);
+            chapterList.classList.toggle('hidden');
+        }
+
+        // Toggle videos visibility
+        function toggleVideos(chapterId) {
+            const videoList = document.getElementById(`video-list-${chapterId}`);
+            videoList.classList.toggle('hidden');
+        }
+
+        // Toggle Create Video Form visibility
+        function toggleCreateVideoForm(chapterId) {
+            selectedChapterId = chapterId;
+            const form = document.getElementById('create-video-form');
+            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+        }
+
+        // Submit the Create Video Form
+        async function submitVideoForm() {
+            const title = document.getElementById('video-title').value;
+            const videoFile = document.getElementById('video-file').files[0];
+
+            // FormData to send the video along with the data
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('video_file', videoFile);
+            formData.append('chapter_id', selectedChapterId); // Append the selected chapter ID
+
+            try {
+                const token = localStorage.getItem('access_token');
+                const response = await fetch('http://192.168.1.115:8001/api/videos/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create video');
+                }
+
+                const newVideo = await response.json();
+                alert('Video created successfully!');
+                toggleCreateVideoForm(selectedChapterId); // Hide form after successful creation
+                fetchDashboardData(); // Reload dashboard to show the new video
+
+            } catch (error) {
+                alert('Error creating video: ' + error.message);
+            }
+        }
+
+        // Dummy functions for edit and delete actions
+        function editChapter(chapterId) {
+            alert('Edit Chapter ' + chapterId);
+            // Implement the edit chapter functionality here
+        }
+
+        function deleteChapter(chapterId) {
+            if (confirm('Are you sure you want to delete this chapter?')) {
+                alert('Delete Chapter ' + chapterId);
+                // Implement the delete chapter functionality here
+            }
+        }
+
+        function editVideo(videoId) {
+            alert('Edit Video ' + videoId);
+            // Implement the edit video functionality here
+        }
+
+        function deleteVideo(videoId) {
+            if (confirm('Are you sure you want to delete this video?')) {
+                alert('Delete Video ' + videoId);
+                // Implement the delete video functionality here
+            }
+        }
+
+        // Toggle Create Course Form visibility
+        function toggleCreateCourseForm() {
+            const form = document.getElementById('create-course-form');
+            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+        }
+
+        // Submit the Create Course Form
+        async function submitCourseForm() {
+            const title = document.getElementById('course-title').value;
+            const description = document.getElementById('course-description').value;
+            const validationDate = document.getElementById('course-validation-date').value;
+            const price = parseFloat(document.getElementById('course-price').value);
+            const thumbnail = document.getElementById('course-thumbnail').files[0];
+
+            // FormData to send file along with the data
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('validation_date', validationDate);
+            formData.append('price', price);
+            formData.append('thumbnail', thumbnail);  // Adding the thumbnail file
+
+            try {
+                const token = localStorage.getItem('access_token');
+                const response = await fetch('http://192.168.1.115:8001/api/courses/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create course');
+                }
+
+                const newCourse = await response.json();
+                alert('Course created successfully!');
+                toggleCreateCourseForm(); // Hide form after successful creation
+                fetchDashboardData(); // Reload dashboard to show the new course
+
+            } catch (error) {
+                alert('Error creating course: ' + error.message);
+            }
         }
     </script>
 </body>

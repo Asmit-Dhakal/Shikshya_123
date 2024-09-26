@@ -39,6 +39,13 @@ class VideoSerializer(serializers.ModelSerializer):
         return ''
 
 
+
+class ChapterDSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Chapter
+        fields = ['id', 'title', 'description']
+
 class ChapterSerializer(serializers.ModelSerializer):
     videos = VideoSerializer(many=True, read_only=True)
 
@@ -48,6 +55,23 @@ class ChapterSerializer(serializers.ModelSerializer):
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
+    chapters = ChapterDSerializer(many=True, read_only=True)
+    thumbnail_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = ['id', 'teacher', 'title', 'description', 'thumbnail', 'thumbnail_url', 'validation_date', 'price', 'chapters']
+        read_only_fields = ['teacher']
+
+    def get_thumbnail_url(self, obj):
+        request = self.context.get('request')
+        if obj.thumbnail:
+            if request:
+                return request.build_absolute_uri(obj.thumbnail.url)
+            return f"{settings.BASE_URL}{obj.thumbnail.url}"  # Static base URL as a fallback
+        return ''
+
+class CourseDetailPaidSerializer(serializers.ModelSerializer):
     chapters = ChapterSerializer(many=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
 
@@ -63,6 +87,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.thumbnail.url)
             return f"{settings.BASE_URL}{obj.thumbnail.url}"  # Static base URL as a fallback
         return ''
+
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -124,7 +149,7 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
     # Use CourseDetailSerializer to include chapters and videos
     def get_courses(self, obj):
         courses = Course.objects.filter(teacher=obj)
-        return CourseDetailSerializer(courses, many=True, context=self.context).data if courses.exists() else []
+        return CourseDetailPaidSerializer(courses, many=True, context=self.context).data if courses.exists() else []
 
     def get_bookings(self, obj):
         bookings = Booking.objects.filter(course__teacher=obj)
@@ -149,3 +174,5 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
         profile.save()
 
         return instance
+
+
