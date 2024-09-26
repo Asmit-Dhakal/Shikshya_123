@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from Shikshya import settings
 from .models import Course, Booking, Payment, Chapter, Video
 from profiles.models import TeacherProfile  # Assuming TeacherProfile is another app's model
 from users.models import User  # Assuming User is your custom User model
@@ -17,7 +19,7 @@ class CourseSerializer(serializers.ModelSerializer):
         if obj.thumbnail:
             if request:
                 return request.build_absolute_uri(obj.thumbnail.url)
-            return f"https://192.168.18.237:8003{obj.thumbnail.url}"  # Provide a static base URL for the thumbnail
+            return f"{settings.BASE_URL}{obj.thumbnail.url}"  # Static base URL as a fallback
         return ''
 
 
@@ -33,7 +35,7 @@ class VideoSerializer(serializers.ModelSerializer):
         if obj.video_file:
             if request:
                 return request.build_absolute_uri(obj.video_file.url)
-            return f"https://192.168.18.237:8003{obj.video_file.url}"  # Provide a static base URL for the video file
+            return f"{settings.BASE_URL}{obj.video_file.url}"  # Static base URL as a fallback
         return ''
 
 
@@ -59,7 +61,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
         if obj.thumbnail:
             if request:
                 return request.build_absolute_uri(obj.thumbnail.url)
-            return f"https://192.168.18.237:8003{obj.thumbnail.url}"  # Provide a static base URL for the thumbnail
+            return f"{settings.BASE_URL}{obj.thumbnail.url}"  # Static base URL as a fallback
         return ''
 
 

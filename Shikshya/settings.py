@@ -22,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = 'django-insecure-yo2a1w0s%ko87--vf$a)+j+d27xi0*l!m*l!t56yt-1*j1zin4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', '192.168.1.104','192.168.1.101','192.168.18.237']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', '192.168.1.104','192.168.1.101','192.168.18.237','161.35.116.6','192.168.1.115']
 
 
 
@@ -177,3 +178,5 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     }
 }
+
+BASE_URL = 'http://192.168.1.115:8001'

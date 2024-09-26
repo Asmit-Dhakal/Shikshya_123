@@ -1,7 +1,5 @@
 from django.db import models
-from django.conf import settings
-from django.utils.functional import cached_property
-from django.shortcuts import reverse
+from django.conf import settings  # To access BASE_URL
 
 class Course(models.Model):
     teacher = models.ForeignKey(
@@ -25,8 +23,9 @@ class Course(models.Model):
         return ''
 
     def full_image_url(self):
+        """Returns the full URL for the thumbnail image using the base URL."""
         if self.thumbnail:
-            return f"https://192.168.18.237:8003{self.thumbnail.url}"  # Replace 127.0.0.1 with your IP if needed
+            return f"{settings.BASE_URL}{self.thumbnail.url}"  # Use BASE_URL from settings
         return ''
 
 
@@ -37,6 +36,7 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+
 
 class Video(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='videos')
@@ -53,11 +53,11 @@ class Video(models.Model):
             return self.video_file.url  # Local access URL
         return ''
 
-
     def full_video_url(self):
-       if self.video_file:
-        return f"https://192.168.18.237:8003{self.video_file.url}"  # Replace 127.0.0.1 with your IP if needed
-       return ''
+        """Returns the full URL for the video file using the base URL."""
+        if self.video_file:
+            return f"{settings.BASE_URL}{self.video_file.url}"  # Use BASE_URL from settings
+        return ''
 
 
 class Booking(models.Model):
@@ -70,6 +70,7 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.student.username} booked {self.course.title}"
+
 
 class Payment(models.Model):
     PAYMENT_CHOICES = [
