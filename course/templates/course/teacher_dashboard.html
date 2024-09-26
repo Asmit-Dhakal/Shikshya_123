@@ -10,7 +10,81 @@
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-lg rounded-lg">
-        <h1 class="text-4xl font-bold text-center mb-10">Complete Course Dashboard</h1>
+        <h1 class="text-4xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-transparent bg-clip-text shadow-lg p-4 rounded-lg">
+    Teacher Course Dashboard
+</h1>
+
+
+
+       <!-- Profile Section -->
+<section id="profile" class="mb-10 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+    <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 flex items-center justify-center">
+        <svg class="w-8 h-8 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c.828 0 1.5-.672 1.5-1.5S12.828 8 12 8s-1.5.672-1.5 1.5S11.172 11 12 11zM12 14v6M12 12a2 2 0 00-1-1.732V8.268A2 2 0 0012 7a2 2 0 011 1.732v2A2 2 0 0012 12z"></path>
+        </svg>
+        Profile
+    </h2>
+
+    <div id="profile-loading" class="text-center text-gray-500">Loading profile...</div>
+
+    <div id="profile-details" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+        <!-- Username -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-blue-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v6m0 0v-6m0 0V8m0 6c-.828 0-1.5-.672-1.5-1.5S11.172 11 12 11s1.5.672 1.5 1.5S12.828 14 12 14z"></path>
+            </svg>
+            <p><strong>Username:</strong> <span id="username" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Email -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h.01M12 8v.01M8 12h.01M12 16h.01M21 12c0-4.418-3.582-8-8-8s-8 3.582-8 8 3.582 8 8 8 8-3.582 8-8z"></path>
+            </svg>
+            <p><strong>Email:</strong> <span id="email" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Address -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-yellow-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l4-2m0-4L8 12M16 4v6a1 1 0 001 1h6"></path>
+            </svg>
+            <p><strong>Address:</strong> <span id="address" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Country -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v.01M12 8v.01M12 16v.01M12 20v.01M4 4h16"></path>
+            </svg>
+            <p><strong>Country:</strong> <span id="country" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-purple-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5.5C3 4.67 3.67 4 4.5 4h7c.83 0 1.5.67 1.5 1.5v13c0 .83-.67 1.5-1.5 1.5h-7C3.67 20 3 19.33 3 18.5v-13zM13.5 12h3a1.5 1.5 0 011.5 1.5v2a1.5 1.5 0 01-1.5 1.5h-3a1.5 1.5 0 01-1.5-1.5v-2A1.5 1.5 0 0113.5 12z"></path>
+            </svg>
+            <p><strong>Phone Number:</strong> <span id="phone_number" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Bio -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-indigo-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H7m6 4H7m6-8H7m12-4a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h14z"></path>
+            </svg>
+            <p><strong>Bio:</strong> <span id="bio" class="text-gray-700"></span></p>
+        </div>
+
+        <!-- Expertise -->
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+            <svg class="w-6 h-6 text-pink-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8"></path>
+            </svg>
+            <p><strong>Expertise:</strong> <span id="expertise" class="text-gray-700"></span></p>
+        </div>
+    </div>
+</section>
 
         <!-- Create Course Button -->
         <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded mb-8 hover:bg-blue-600" onclick="toggleCreateCourseForm()">Create New Course</button>
@@ -26,21 +100,6 @@
             <input type="file" id="course-thumbnail" accept="image/*" class="w-full mb-4 p-2 border border-gray-300 rounded" required>
             <button class="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600" onclick="submitCourseForm()">Create Course</button>
         </div>
-
-        <!-- Profile Section -->
-        <section id="profile" class="mb-10">
-            <h2 class="text-3xl font-semibold text-center mb-6">Profile</h2>
-            <p id="profile-loading" class="text-center text-gray-500">Loading profile...</p>
-            <div id="profile-details" class="text-center hidden">
-                <p><strong>Username:</strong> <span id="username"></span></p>
-                <p><strong>Email:</strong> <span id="email"></span></p>
-                <p><strong>Address:</strong> <span id="address"></span></p>
-                <p><strong>Country:</strong> <span id="country"></span></p>
-                <p><strong>Phone Number:</strong> <span id="phone_number"></span></p>
-                <p><strong>Bio:</strong> <span id="bio"></span></p>
-                <p><strong>Expertise:</strong> <span id="expertise"></span></p>
-            </div>
-        </section>
 
         <!-- Courses Section -->
         <section id="courses" class="mb-10">
