@@ -14,6 +14,8 @@ import os
 from django.http import StreamingHttpResponse, Http404
 import re
 import requests
+import uuid
+
 
 
 # Helper function to serve video files with byte-range support
@@ -190,24 +192,29 @@ class BookCourseView(APIView):
         course_id = request.data.get('course')
         course = get_object_or_404(Course, id=course_id)
 
+        # Check if the student has already booked the course
         if Booking.objects.filter(student=request.user, course=course).exists():
             return Response({'detail': 'Already booked for this course.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create booking
         booking = Booking.objects.create(student=request.user, course=course)
 
-        # Initiate payment process (you could also redirect to a payment gateway here)
+        # Generate a unique transaction ID
+        transaction_id = str(uuid.uuid4())
+
+        # Create the payment data
         payment_data = {
             'student': request.user,
             'course': course,
             'amount': course.price,
             'status': 'pending',
-            'transaction_id': 'temp_transaction_id',  # Replace with actual transaction ID
+            'transaction_id': transaction_id,  # Correct key without space
         }
 
         # Create payment
         payment = Payment.objects.create(**payment_data)
 
+        # Return booking and payment details to the frontend
         return Response({
             'booking': BookingSerializer(booking).data,
             'payment': {

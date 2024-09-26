@@ -78,7 +78,7 @@ class Payment(models.Model):
         ('esewa', 'eSewa'),
     ]
     STATUS_CHOICES = [
-        ('completed', 'Completed'),
+        ('success', 'success'),
         ('pending', 'Pending'),
         ('failed', 'Failed'),
     ]

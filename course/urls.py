@@ -23,7 +23,7 @@ urlpatterns = [
     path('videos/<int:video_id>/stream/', VideoStreamView.as_view(), name='video_stream'),
 
     # Booking management
-    path('courses/<int:course_id>/book/', BookCourseView.as_view(), name='course_book'),
+    path('courses/book/', BookCourseView.as_view(), name='course_book'),
     path('courses/booked/', BookedCoursesView.as_view(), name='booked_courses'),
     path('bookings/<int:pk>/', BookingDetailView.as_view(), name='booking_detail'),
     path('bookings/delete/<int:course_id>/', DeleteBookingView.as_view(), name='delete_booking'),
