@@ -32,5 +32,3 @@ urlpatterns = [
     path('',views.login ,name='login'),
     path('teacher-dashboard/',course_views.dashboard,name='teacher-dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
