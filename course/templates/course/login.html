@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,7 @@
   <div class="flex w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
     <!-- Left Image Section -->
     <div class="w-1/2">
-      <img src="/images/download.jpeg" alt="Job seeker" class="w-full h-full object-cover">
+      <img src="{% static 'course/images/download.jpeg' %}" alt="image" class="w-full h-full object-cover">
     </div>
 
     <!-- Right Login Section -->
