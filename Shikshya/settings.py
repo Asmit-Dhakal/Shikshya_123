@@ -181,6 +181,6 @@ CHANNEL_LAYERS = {
     }
 }
 
-BASE_URL = ' http://192.168.1.115:8000/'
+BASE_URL = 'https://swiftlyftlogistic.com'
 
 
