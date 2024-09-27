@@ -16,7 +16,7 @@ urlpatterns = [
 
     # Chapter management
     path('courses/<int:course_id>/chapters/', ChapterListView.as_view(), name='chapter_list'),
-    path('courses/<int:course_id>/chapters/create/', ChapterCreateView.as_view(), name='chapter_create'),
+    path('courses/chapters/create/<int:course_id>/', ChapterCreateView.as_view(), name='chapter_create'),
 
     # Video management
     path('chapters/<int:chapter_id>/videos/', VideoListView.as_view(), name='video_list'),

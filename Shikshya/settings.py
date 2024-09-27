@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yo2a1w0s%ko87--vf$a)+j+d27xi0*l!m*l!t56yt-1*j1zin4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','192.168.1.115','161.35.116.6','https://swiftlyftlogistic.com']
 
@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'chat',
 ]
-ASGI_APPLICATION = 'Shikshya.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +67,8 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'Shikshya.urls'
+
+ASGI_APPLICATION = 'Shikshya.asgi.application'
 
 
 TEMPLATES = [
@@ -180,13 +181,6 @@ CHANNEL_LAYERS = {
     }
 }
 
-BASE_URL = 'https://swiftlyftlogistic.com'
+BASE_URL = ' http://192.168.1.115:8000/'
 
 
-SECURE_SSL_REDIRECT = True  # Redirects HTTP requests to HTTPS
-SECURE_HSTS_SECONDS = 31536000  # Forces HTTPS for a specified period (1 year in this case)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Use this if your site is behind a proxy/load balancer
-SECURE_BROWSER_XSS_FILTER = True  # Prevent XSS attacks
-SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent content-sniffing

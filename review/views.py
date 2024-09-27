@@ -60,9 +60,7 @@ class ReviewListCreateView(APIView):
         student = request.user
 
         # Check if the user has already posted a review for this course
-        if Review.objects.filter(course=course, student=student).exists():
-            return Response({"error": "You have already posted a review for this course."},
-                            status=status.HTTP_400_BAD_REQUEST)
+
 
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
@@ -111,8 +109,6 @@ class RatingListCreateView(APIView):
         student = request.user
 
         # Check if the user has already rated this course
-        if Rating.objects.filter(course=course, student=student).exists():
-            return Response({"error": "You have already rated this course."}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid():

@@ -87,5 +87,7 @@ class StudentDashboardView(APIView):
         return Response({'message': 'Welcome to the Student Dashboard!'}, status=status.HTTP_200_OK)
 
 def login(request):
-
     return render(request, 'course/login.html')
+
+def register(request):
+    return render(request, 'course/register.html')

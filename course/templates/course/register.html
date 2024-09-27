@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen bg-cover bg-center" style="background-image: url('https://source.unsplash.com/1600x900/?education');">
+
+    <!-- Outer container for centering the form -->
+    <div class="bg-white p-10 rounded-lg shadow-lg max-w-lg mx-auto">
+
+        <!-- Logo and Title -->
+        <div class="text-center mb-6">
+            <img src="https://img.icons8.com/clouds/100/000000/student-male.png" alt="Registration Icon" class="mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 mt-4">Register Your Account</h2>
+            <p class="text-gray-600 mt-2">Join us and start your journey!</p>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registerForm" class="space-y-6" action="{{ base_url }}/api/register/" method="POST">
+            <!-- Username Field -->
+            <div class="relative">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <input type="text" id="username" name="username" required
+                           class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 0111 14h.24a4 4 0 013.922 3.322l.31 1.555a2.598 2.598 0 00.525-.23A7.002 7.002 0 0020 13a7 7 0 10-6.268 4H11a4 4 0 01-3.879-4.196l-.31-1.554a2.599 2.599 0 00-.527.23A7 7 0 105.12 17.804z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="relative">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <input type="email" id="email" name="email" required
+                           class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12v4m0 4v-4m-8-4v4m0 4v-4m8 4v-4a4 4 0 10-8 0v4a4 4 0 008 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="relative">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <input type="password" id="password" name="password" required
+                           class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c3.59 0 6.1-2.71 6.1-6.1A6.1 6.1 0 0012 0a6.1 6.1 0 00-6.1 6.1C5.9 8.29 8.41 11 12 11zm3 2H9a4 4 0 00-4 4v5a4 4 0 004 4h6a4 4 0 004-4v-5a4 4 0 00-4-4z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="relative">
+                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <select id="role" name="role" required
+                            class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Address Field -->
+            <div class="relative">
+                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                <input type="text" id="address" name="address" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Country Field -->
+            <div class="relative">
+                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                <input type="text" id="country" name="country" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="relative">
+                <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="tel" id="phone_number" name="phone_number" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="w-full py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Register
+                </button>
+            </div>
+        </form>
+
+        <!-- Login Link -->
+        <p class="mt-6 text-center text-sm text-gray-600">Already have an account? <a href="{% url 'login' %}" class="text-indigo-600 hover:text-indigo-500">Login here</a></p>
+    </div>
+
+    <!-- JavaScript for Registration Handling -->
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value,
+                address: document.getElementById('address').value,
+                country: document.getElementById('country').value,
+                phone_number: document.getElementById('phone_number').value
+            };
+
+            fetch('{{ base_url }}/api/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.tokens) {
+                    localStorage.setItem('access_token', data.tokens.access);
+                    localStorage.setItem('refresh_token', data.tokens.refresh);
+                    alert("Registration successful!");
+                    window.location.href = '/teacher-dashboard/';
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("Error during registration.");
+            });
+        });
+    </script>
+</body>
+</html>

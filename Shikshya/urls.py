@@ -30,5 +30,6 @@ urlpatterns = [
     path("api/",include('review.urls')),
     path('api/',include('profiles.urls')),
     path('',views.login ,name='login'),
+    path('register/',views.register ,name='register'),
     path('teacher-dashboard/',course_views.dashboard,name='teacher-dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
